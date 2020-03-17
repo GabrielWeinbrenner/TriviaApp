@@ -9,20 +9,34 @@ export default class TriviaQuestions extends Component {
 		this.state = {
 			currentQuestion: 0,
 			questionsRight: 0,
+			questionLog: [],
 		};
 	}
 	checkIfCorrect = (item) => {
 		if (item === this.props.questions[this.state.currentQuestion].correct_answer) {
 			console.log("CORRECT");
+			var question = {
+				num: this.state.currentQuestion + 1,
+				wasCorrect: true,
+			};
+			var newArr = this.state.questionLog.concat(question);
 			this.setState({
 				currentQuestion: this.state.currentQuestion + 1,
+				questionsRight: this.state.questionsRight + 1,
+				questionLog: newArr,
 			});
-			return true;
 		} else {
+			question = {
+				num: this.state.currentQuestion + 1,
+				wasCorrect: false,
+			};
+			var newArr = this.state.questionLog.concat(question);
+
 			this.setState({
 				currentQuestion: this.state.currentQuestion + 1,
+
+				questionLog: newArr,
 			});
-			return false;
 		}
 	};
 	shuffle = (a) => {
@@ -54,14 +68,28 @@ export default class TriviaQuestions extends Component {
 						renderItem={({ item }) => (
 							<TouchableOpacity
 								onPress={() => this.checkIfCorrect(item)}
-								style={styles.answerContainer}
-								key={id}>
+								style={styles.answerContainer}>
 								<Text style={styles.answerText}>{item}</Text>
 							</TouchableOpacity>
 						)}
 						keyExtractor={(item, index) => {
 							index.toString();
 						}}
+					/>
+				</View>
+				<View style={styles.correctQuestions}>
+					<FlatList
+						data={this.state.questionLog}
+						horizontal={true}
+						renderItem={({ item }) => (
+							<View
+								style={[
+									styles.questionsNumber,
+									item.wasCorrect ? styles.questionCorrect : styles.questionIncorrect,
+								]}>
+								<Text>{item.num}</Text>
+							</View>
+						)}
 					/>
 				</View>
 			</View>
@@ -77,11 +105,13 @@ const styles = StyleSheet.create({
 	},
 	questionText: {
 		marginTop: 20,
+		height: 100,
+		width: 400,
 		fontSize: 20,
 		textAlign: "center",
 	},
 	answersContainer: {
-		marginTop: 50,
+		marginTop: 30,
 		height: 500,
 		width: 400,
 		backgroundColor: "white",
@@ -101,5 +131,26 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		textAlign: "center",
+	},
+	correctQuestions: {
+		position: "relative",
+
+		marginBottom: 20,
+	},
+	questionsNumber: {
+		alignItems: "center",
+		justifyContent: "center",
+
+		height: 30,
+		margin: 20,
+		width: 30,
+		borderRadius: 15,
+		borderColor: "black",
+	},
+	questionCorrect: {
+		backgroundColor: "#00b300",
+	},
+	questionIncorrect: {
+		backgroundColor: "#ff3300",
 	},
 });
