@@ -6,36 +6,45 @@ import { FlatList } from "react-native-gesture-handler";
 export default class TriviaQuestions extends Component {
 	constructor(props) {
 		super(props);
+		var a = [...Array(this.props.questions.length + 1).keys()].slice(1);
+		var b = a.map((x) => {
+			return {
+				questionNum: x,
+				wasCorrect: null,
+			};
+		});
 		this.state = {
 			currentQuestion: 0,
 			questionsRight: 0,
-			questionLog: [],
+			questionLog: b,
 		};
 	}
 	checkIfCorrect = (item) => {
 		if (item === this.props.questions[this.state.currentQuestion].correct_answer) {
-			console.log("CORRECT");
-			var question = {
-				num: this.state.currentQuestion + 1,
-				wasCorrect: true,
-			};
-			var newArr = this.state.questionLog.concat(question);
+			console.log(this.state.questionLog);
+			var obj = this.state.questionLog[this.state.currentQuestion];
+			console.log(obj);
+			obj.wasCorrect = true;
+			var questLog = this.state.questionLog;
+			questLog[this.state.currentQuestion] = obj;
 			this.setState({
 				currentQuestion: this.state.currentQuestion + 1,
 				questionsRight: this.state.questionsRight + 1,
-				questionLog: newArr,
+				questionLog: questLog,
 			});
 		} else {
-			question = {
-				num: this.state.currentQuestion + 1,
-				wasCorrect: false,
-			};
-			var newArr = this.state.questionLog.concat(question);
+			console.log(this.state.questionLog);
+
+			var obj = this.state.questionLog[this.state.currentQuestion];
+			console.log(obj);
+			obj.wasCorrect = false;
+			var questLog = this.state.questionLog;
+			questLog[this.state.currentQuestion] = obj;
 
 			this.setState({
 				currentQuestion: this.state.currentQuestion + 1,
 
-				questionLog: newArr,
+				questionLog: questLog,
 			});
 		}
 	};
@@ -49,6 +58,11 @@ export default class TriviaQuestions extends Component {
 		}
 		return a;
 	};
+	convert = (item) => {
+		item = item.replace(/&#039;/g, "'");
+		item = item.replace(/&quot;/g, '"');
+		return item;
+	};
 	render() {
 		var answers = this.shuffle(
 			this.props.questions[this.state.currentQuestion].incorrect_answers.concat(
@@ -59,7 +73,10 @@ export default class TriviaQuestions extends Component {
 		return (
 			<View style={styles.container}>
 				<View>
-					<MonoText style={styles.questionText}> {this.props.questions[this.state.currentQuestion].question} </MonoText>
+					<MonoText style={styles.questionText}>
+						{" "}
+						{this.convert(this.props.questions[this.state.currentQuestion].question)}{" "}
+					</MonoText>
 				</View>
 				<View style={styles.answersContainer}>
 					<FlatList
@@ -69,7 +86,7 @@ export default class TriviaQuestions extends Component {
 							<TouchableOpacity
 								onPress={() => this.checkIfCorrect(item)}
 								style={styles.answerContainer}>
-								<Text style={styles.answerText}>{item}</Text>
+								<Text style={styles.answerText}>{this.convert(item)}</Text>
 							</TouchableOpacity>
 						)}
 						keyExtractor={(item, index) => {
@@ -85,7 +102,11 @@ export default class TriviaQuestions extends Component {
 							<View
 								style={[
 									styles.questionsNumber,
-									item.wasCorrect ? styles.questionCorrect : styles.questionIncorrect,
+									item.wasCorrect !== null
+										? item.wasCorrect
+											? styles.questionCorrect
+											: styles.questionIncorrect
+										: styles.questionNotSolved,
 								]}>
 								<Text>{item.num}</Text>
 							</View>
@@ -105,7 +126,7 @@ const styles = StyleSheet.create({
 	},
 	questionText: {
 		marginTop: 20,
-		height: 100,
+		height: 120,
 		width: 400,
 		fontSize: 20,
 		textAlign: "center",
@@ -133,6 +154,9 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	correctQuestions: {
+		alignItems: "center",
+		justifyContent: "center",
+
 		position: "relative",
 
 		marginBottom: 20,
@@ -152,5 +176,8 @@ const styles = StyleSheet.create({
 	},
 	questionIncorrect: {
 		backgroundColor: "#ff3300",
+	},
+	questionNotSolved: {
+		backgroundColor: "grey",
 	},
 });

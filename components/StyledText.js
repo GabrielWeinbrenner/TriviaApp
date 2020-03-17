@@ -3,5 +3,5 @@ import { Text } from "react-native";
 import * as Font from "expo-font";
 
 export function MonoText(props) {
-	return <Text {...props} style={[props.style]} />;
+	return <Text {...props} style={[props.style, { fontFamily: "space-mono" }]} />;
 }
