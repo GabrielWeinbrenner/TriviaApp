@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import { MonoText } from "../components/StyledText";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -21,9 +21,7 @@ export default class TriviaQuestions extends Component {
 	}
 	checkIfCorrect = (item) => {
 		if (item === this.props.questions[this.state.currentQuestion].correct_answer) {
-			console.log(this.state.questionLog);
 			var obj = this.state.questionLog[this.state.currentQuestion];
-			console.log(obj);
 			obj.wasCorrect = true;
 			var questLog = this.state.questionLog;
 			questLog[this.state.currentQuestion] = obj;
@@ -33,10 +31,7 @@ export default class TriviaQuestions extends Component {
 				questionLog: questLog,
 			});
 		} else {
-			console.log(this.state.questionLog);
-
 			var obj = this.state.questionLog[this.state.currentQuestion];
-			console.log(obj);
 			obj.wasCorrect = false;
 			var questLog = this.state.questionLog;
 			questLog[this.state.currentQuestion] = obj;
@@ -69,7 +64,6 @@ export default class TriviaQuestions extends Component {
 				this.props.questions[this.state.currentQuestion].correct_answer
 			)
 		);
-		console.log(answers);
 		return (
 			<View style={styles.container}>
 				<View>
@@ -94,24 +88,31 @@ export default class TriviaQuestions extends Component {
 						}}
 					/>
 				</View>
-				<View style={styles.correctQuestions}>
-					<FlatList
-						data={this.state.questionLog}
-						horizontal={true}
-						renderItem={({ item }) => (
-							<View
-								style={[
-									styles.questionsNumber,
-									item.wasCorrect !== null
-										? item.wasCorrect
-											? styles.questionCorrect
-											: styles.questionIncorrect
-										: styles.questionNotSolved,
-								]}>
-								<Text>{item.num}</Text>
-							</View>
-						)}
-					/>
+				<View style={styles.questLog}>
+					<ScrollView>
+						<FlatList
+							contentContainerStyle={{
+								alignSelf: "flex-start",
+							}}
+							numColumns={this.state.questionLog.length / 2}
+							showsVerticalScrollIndicator={false}
+							showsHorizontalScrollIndicator={false}
+							data={this.state.questionLog}
+							renderItem={({ item }) => (
+								<View
+									style={[
+										styles.questionsNumber,
+										item.wasCorrect !== null
+											? item.wasCorrect
+												? styles.questionCorrect
+												: styles.questionIncorrect
+											: styles.questionNotSolved,
+									]}>
+									<Text>{item.questionNum}</Text>
+								</View>
+							)}
+						/>
+					</ScrollView>
 				</View>
 			</View>
 		);
@@ -153,31 +154,33 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		textAlign: "center",
 	},
-	correctQuestions: {
-		alignItems: "center",
-		justifyContent: "center",
-
-		position: "relative",
-
-		marginBottom: 20,
+	questLog: {
+		top: -70,
 	},
 	questionsNumber: {
 		alignItems: "center",
 		justifyContent: "center",
-
 		height: 30,
-		margin: 20,
+		margin: 10,
+		marginRight: 20,
+		marginLeft: 20,
 		width: 30,
 		borderRadius: 15,
 		borderColor: "black",
 	},
 	questionCorrect: {
+		// borderWidth: 1,
+		// borderColor: "black",
 		backgroundColor: "#00b300",
 	},
 	questionIncorrect: {
+		// borderWidth: 1,
+		// borderColor: "black",
 		backgroundColor: "#ff3300",
 	},
 	questionNotSolved: {
-		backgroundColor: "grey",
+		borderWidth: 1,
+		borderColor: "black",
+		backgroundColor: "white",
 	},
 });
