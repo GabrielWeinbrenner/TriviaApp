@@ -15,22 +15,22 @@ export default class SubmitName extends Component {
 				<MonoText style={styles.welcomeText}>Welcome to Trivia!!</MonoText>
 				<View style={styles.welcomeContainer}>
 					<Image
-						source={
-							__DEV__
-								? require("../assets/images/robot-dev.png")
-								: require("../assets/images/robot-prod.png")
-						}
-						style={styles.welcomeImage}
+						source={__DEV__ ? require("../assets/images/brain.png") : require("../assets/images/brain.png")}
+						style={[styles.welcomeImage, { width: 300, height: 300 }]}
 					/>
 				</View>
 				<View>
 					<View></View>
 					<MonoText style={styles.nameLabel}>ENTER YOUR NAME:</MonoText>
 					<View style={styles.nameInput}>
-						<TextInput onChangeText={(name) => this.setState({ name })} value={this.state.name} />
+						<TextInput
+							style={{ color: "#D0D0C0" }}
+							onChangeText={(name) => this.setState({ name })}
+							value={this.state.name}
+						/>
 					</View>
 					<View style={styles.submitButton}>
-						<Button title="SUBMIT" onPress={this.props.nameSubmit} />
+						<Button style={styles.submitButton} title="SUBMIT" onPress={this.props.nameSubmit} />
 					</View>
 				</View>
 			</View>
@@ -41,7 +41,7 @@ export default class SubmitName extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#242C40",
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -49,17 +49,20 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		color: "rgba(0,0,0,0.4)",
 		fontSize: 30,
+		color: "#D0D0C0",
 		textAlign: "center",
 	},
 	nameLabel: {
+		color: "#D0D0C0",
 		marginTop: 10,
 		letterSpacing: 2,
 		fontSize: 16,
 	},
-	submitButton: { marginTop: 20 },
+	submitButton: { marginTop: 20, color: "#D0D0C0" },
 	nameInput: {
-		backgroundColor: "white",
-		borderBottomColor: "#000000",
+		color: "#D0D0C0",
+		backgroundColor: "#242C40",
+		borderBottomColor: "#D0D0C0",
 		borderBottomWidth: 1,
 		marginTop: 20,
 		fontSize: 20,

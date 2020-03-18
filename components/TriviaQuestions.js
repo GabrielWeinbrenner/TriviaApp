@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, TouchableOpacity, ScrollView } from "react-nati
 import { MonoText } from "../components/StyledText";
 import { FlatList } from "react-native-gesture-handler";
 
-export default class TriviaQuestions extends Component {
+class TriviaQuestions extends Component {
 	constructor(props) {
 		super(props);
 		var a = [...Array(this.props.questions.length + 1).keys()].slice(1);
@@ -38,7 +38,6 @@ export default class TriviaQuestions extends Component {
 
 			this.setState({
 				currentQuestion: this.state.currentQuestion + 1,
-
 				questionLog: questLog,
 			});
 		}
@@ -58,71 +57,94 @@ export default class TriviaQuestions extends Component {
 		item = item.replace(/&quot;/g, '"');
 		return item;
 	};
+
 	render() {
-		var answers = this.shuffle(
-			this.props.questions[this.state.currentQuestion].incorrect_answers.concat(
-				this.props.questions[this.state.currentQuestion].correct_answer
-			)
-		);
-		return (
-			<View style={styles.container}>
+		var colors = this.shuffle(["#008000", "#cc2900", "#cca300", "#0052cc"]);
+
+		if (this.state.currentQuestion == this.props.questions.length) {
+			console.log(this.state.questionsRight);
+			this.props.setNameSubmit(false);
+			return (
 				<View>
-					<MonoText style={styles.questionText}>
-						{" "}
-						{this.convert(this.props.questions[this.state.currentQuestion].question)}{" "}
-					</MonoText>
+					<Text>Done</Text>
 				</View>
-				<View style={styles.answersContainer}>
-					<FlatList
-						data={answers}
-						numColumns={2}
-						renderItem={({ item }) => (
-							<TouchableOpacity
-								onPress={() => this.checkIfCorrect(item)}
-								style={styles.answerContainer}>
-								<Text style={styles.answerText}>{this.convert(item)}</Text>
-							</TouchableOpacity>
-						)}
-						keyExtractor={(item, index) => {
-							index.toString();
-						}}
-					/>
-				</View>
-				<View style={styles.questLog}>
-					<ScrollView>
+			);
+		} else {
+			var answers = this.shuffle(
+				this.props.questions[this.state.currentQuestion].incorrect_answers.concat(
+					this.props.questions[this.state.currentQuestion].correct_answer
+				)
+			);
+			answers = answers.map((x, index) => {
+				console.log(x);
+				return {
+					question: x,
+					color: colors[index],
+				};
+			});
+			return (
+				<View style={styles.container}>
+					<View>
+						<MonoText style={styles.questionText}>
+							{" "}
+							{this.convert(this.props.questions[this.state.currentQuestion].question)}{" "}
+						</MonoText>
+					</View>
+					<View style={[styles.answersContainer]}>
 						<FlatList
-							contentContainerStyle={{
-								alignSelf: "flex-start",
-							}}
-							numColumns={this.state.questionLog.length / 2}
-							showsVerticalScrollIndicator={false}
-							showsHorizontalScrollIndicator={false}
-							data={this.state.questionLog}
-							renderItem={({ item }) => (
-								<View
-									style={[
-										styles.questionsNumber,
-										item.wasCorrect !== null
-											? item.wasCorrect
-												? styles.questionCorrect
-												: styles.questionIncorrect
-											: styles.questionNotSolved,
-									]}>
-									<Text>{item.questionNum}</Text>
-								</View>
+							data={answers}
+							numColumns={2}
+							renderItem={({ item, index }) => (
+								<TouchableOpacity
+									onPress={() => this.checkIfCorrect(item.question)}
+									style={[styles.answerContainer, { backgroundColor: item.color }]}>
+									<Text style={styles.answerText}>{this.convert(item.question)}</Text>
+								</TouchableOpacity>
 							)}
+							keyExtractor={(item, index) => {
+								index.toString();
+							}}
 						/>
-					</ScrollView>
+					</View>
+					<View style={styles.questLog}>
+						<ScrollView>
+							<FlatList
+								contentContainerStyle={{
+									alignSelf: "flex-start",
+								}}
+								numColumns={this.state.questionLog.length / 2}
+								showsVerticalScrollIndicator={false}
+								showsHorizontalScrollIndicator={false}
+								data={this.state.questionLog}
+								renderItem={({ item }) => (
+									<View
+										style={[
+											styles.questionsNumber,
+											item.wasCorrect !== null
+												? item.wasCorrect
+													? styles.questionCorrect
+													: styles.questionIncorrect
+												: styles.questionNotSolved,
+										]}>
+										<Text>{item.questionNum}</Text>
+									</View>
+								)}
+							/>
+						</ScrollView>
+					</View>
 				</View>
-			</View>
-		);
+			);
+		}
 	}
 }
+export default TriviaQuestions;
+// darkmode: #242C40
+// dartext: #D0D0C0
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#242C40",
 		alignItems: "center",
 	},
 	questionText: {
@@ -131,16 +153,17 @@ const styles = StyleSheet.create({
 		width: 400,
 		fontSize: 20,
 		textAlign: "center",
+		color: "#D0D0C0",
 	},
 	answersContainer: {
 		marginTop: 30,
 		height: 500,
 		width: 400,
-		backgroundColor: "white",
+		backgroundColor: "#242C40",
 	},
 	answerText: {
 		fontSize: 20,
-		color: "black",
+		color: "#D0D0C0",
 	},
 	answerContainer: {
 		height: 170,
@@ -153,6 +176,15 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		textAlign: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 12,
+		},
+		shadowOpacity: 0.58,
+		shadowRadius: 16.0,
+
+		elevation: 24,
 	},
 	questLog: {
 		top: -70,

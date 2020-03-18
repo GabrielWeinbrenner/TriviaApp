@@ -4,6 +4,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import * as WebBrowser from "expo-web-browser";
 import SubmitName from "../components/SubmitName";
 import TriviaQuestions from "../components/TriviaQuestions";
+// darkmode: #242C40
+// dartext: #D0D0C0
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -21,10 +23,14 @@ export default class HomeScreen extends React.Component {
 			});
 		});
 	};
-
+	setNameSubmit = (nameSubmit) => {
+		this.setState({
+			nameSubmit,
+		});
+	};
 	render() {
 		if (this.state.nameSubmit) {
-			return <TriviaQuestions questions={this.state.questions} />;
+			return <TriviaQuestions questions={this.state.questions} setNameSubmit={this.setNameSubmit} />;
 		} else {
 			return <SubmitName nameSubmit={this.nameSubmit} />;
 		}
@@ -38,7 +44,7 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#242C40",
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -46,6 +52,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		color: "rgba(0,0,0,0.4)",
 		fontSize: 30,
+		color: "#D0D0C0",
 		textAlign: "center",
 	},
 	contentContainer: {
