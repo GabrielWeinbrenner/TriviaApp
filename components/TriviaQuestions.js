@@ -81,11 +81,12 @@ class TriviaQuestions extends Component {
 					this.props.questions[this.state.currentQuestion].correct_answer
 				)
 			);
+			// Math.floor(Math.random() * 280) + 270
 			answers = answers.map((x, index) => {
-				console.log(x);
 				return {
 					question: x,
 					color: colors[index],
+					rotate: index == 2 || index == 0 ? "-5deg" : "5deg",
 				};
 			});
 			return (
@@ -103,7 +104,11 @@ class TriviaQuestions extends Component {
 							renderItem={({ item, index }) => (
 								<TouchableOpacity
 									onPress={() => this.checkIfCorrect(item.question)}
-									style={[styles.answerContainer, { backgroundColor: item.color }]}>
+									style={[
+										styles.answerContainer,
+										{ backgroundColor: item.color },
+										{ transform: [{ rotate: item.rotate }] },
+									]}>
 									<Text style={styles.answerText}>{this.convert(item.question)}</Text>
 								</TouchableOpacity>
 							)}
@@ -196,7 +201,6 @@ const styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.58,
 		shadowRadius: 16.0,
-
 		elevation: 24,
 	},
 	questLog: {
