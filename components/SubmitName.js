@@ -30,7 +30,11 @@ export default class SubmitName extends Component {
 						/>
 					</View>
 					<View style={styles.submitButton}>
-						<Button style={styles.submitButton} title="SUBMIT" onPress={this.props.nameSubmit} />
+						<Button
+							style={styles.submitButton}
+							title="SUBMIT"
+							onPress={() => this.props.nameSubmit(this.state.name)}
+						/>
 					</View>
 				</View>
 			</View>

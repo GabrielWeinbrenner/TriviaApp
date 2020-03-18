@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import { MonoText } from "../components/StyledText";
 import { FlatList } from "react-native-gesture-handler";
+import { uploadScore } from "../actions/score";
+import { connect } from "react-redux";
 
 class TriviaQuestions extends Component {
 	constructor(props) {
@@ -62,7 +64,11 @@ class TriviaQuestions extends Component {
 		var colors = this.shuffle(["#008000", "#cc2900", "#cca300", "#0052cc"]);
 
 		if (this.state.currentQuestion == this.props.questions.length) {
-			console.log(this.state.questionsRight);
+			this.props.uploadScore({
+				name: this.props.name,
+				score: this.state.questionsRight,
+			});
+
 			this.props.setNameSubmit(false);
 			return (
 				<View>
@@ -137,7 +143,14 @@ class TriviaQuestions extends Component {
 		}
 	}
 }
-export default TriviaQuestions;
+const mapDispatchToProps = (dispatch) => {
+	return {
+		uploadScore: (score) => dispatch(uploadScore(score)),
+	};
+};
+
+export default connect(null, mapDispatchToProps)(TriviaQuestions);
+
 // darkmode: #242C40
 // dartext: #D0D0C0
 

@@ -16,10 +16,10 @@ export default class HomeScreen extends React.Component {
 			name: "",
 		};
 	}
-	nameSubmit = () => {
+	nameSubmit = (name) => {
 		fetch("https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple").then((res) => {
 			res.json().then((questions) => {
-				this.setState({ questions: questions.results, nameSubmit: true });
+				this.setState({ questions: questions.results, nameSubmit: true, name });
 			});
 		});
 	};
@@ -30,7 +30,7 @@ export default class HomeScreen extends React.Component {
 	};
 	render() {
 		if (this.state.nameSubmit) {
-			return <TriviaQuestions questions={this.state.questions} setNameSubmit={this.setNameSubmit} />;
+			return <TriviaQuestions name={this.state.name} questions={this.state.questions} setNameSubmit={this.setNameSubmit} />;
 		} else {
 			return <SubmitName nameSubmit={this.nameSubmit} />;
 		}

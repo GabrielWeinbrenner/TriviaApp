@@ -9,7 +9,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import reducers from "./reducers/scoreReducer";
+
 import useLinking from "./navigation/useLinking";
+const store = createStore(reducers);
 
 const Stack = createStackNavigator();
 // darkmode: #242C40
@@ -60,14 +65,16 @@ export default function App(props) {
 		return null;
 	} else {
 		return (
-			<View style={styles.container}>
-				{Platform.OS === "ios" && <StatusBar barStyle="default" />}
-				<NavigationContainer theme={MyTheme} ref={containerRef} initialState={initialNavigationState}>
-					<Stack.Navigator>
-						<Stack.Screen name="Root" component={BottomTabNavigator} />
-					</Stack.Navigator>
-				</NavigationContainer>
-			</View>
+			<Provider store={store}>
+				<View style={styles.container}>
+					{Platform.OS === "ios" && <StatusBar barStyle="default" />}
+					<NavigationContainer theme={MyTheme} ref={containerRef} initialState={initialNavigationState}>
+						<Stack.Navigator>
+							<Stack.Screen name="Root" component={BottomTabNavigator} />
+						</Stack.Navigator>
+					</NavigationContainer>
+				</View>
+			</Provider>
 		);
 	}
 }
