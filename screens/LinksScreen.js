@@ -1,6 +1,7 @@
 import * as React from "react";
 import { StyleSheet, Text, View, FlatList, ScrollView } from "react-native";
 import { connect } from "react-redux";
+import { MonoText } from "../components/StyledText";
 
 class LinksScreen extends React.Component {
 	render() {
@@ -11,12 +12,19 @@ class LinksScreen extends React.Component {
 				<FlatList
 					data={this.props.scores}
 					renderItem={({ item }) => (
-						<View style={styles.option}>
-							<Text style={styles.optionText}>
-								{item.name} | {item.score}
-							</Text>
+						<View style={[styles.option, { flex: 1, flexDirection: "row", margin: 1 }]}>
+							<MonoText style={[styles.optionText, { width: 120 }]}> {item.place}</MonoText>
+							<MonoText style={[styles.optionText, { width: 180 }]}> {item.name}</MonoText>
+							<MonoText style={[styles.optionText, { width: 110 }]}> {item.score}</MonoText>
 						</View>
 					)}
+					ListHeaderComponent={
+						<View style={[styles.option, { flex: 1, flexDirection: "row", margin: 1 }]}>
+							<MonoText style={[styles.optionText, { width: 120, fontSize: 20 }]}> PLACE</MonoText>
+							<MonoText style={[styles.optionText, { width: 180, fontSize: 20 }]}> NAME</MonoText>
+							<MonoText style={[styles.optionText, { width: 110, fontSize: 20 }]}>SCORE</MonoText>
+						</View>
+					}
 					keyExtractor={(item) => item.id}
 				/>
 			</ScrollView>
@@ -31,27 +39,26 @@ const styles = StyleSheet.create({
 	},
 
 	contentContainer: {
-		paddingTop: 15,
-	},
-	optionIconContainer: {
-		marginRight: 12,
+		paddingTop: 0,
 	},
 	option: {
 		backgroundColor: "#242C40",
-		paddingHorizontal: 15,
-		paddingVertical: 15,
+
 		borderWidth: StyleSheet.hairlineWidth,
-		borderBottomWidth: 0,
+		borderBottomWidth: 1,
 		borderColor: "#D0D0C0",
 	},
-	lastOption: {
-		borderBottomWidth: StyleSheet.hairlineWidth,
-	},
 	optionText: {
+		width: 75,
+		height: 75,
 		color: "#D0D0C0",
-		fontSize: 15,
-		alignSelf: "flex-start",
+		fontSize: 20,
 		marginTop: 1,
+		padding: 20,
+		paddingRight: 30,
+		justifyContent: "center",
+		alignItems: "center",
+		textAlign: "center",
 	},
 });
 function mapStateToProps(state) {
