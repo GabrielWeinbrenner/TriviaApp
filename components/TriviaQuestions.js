@@ -45,12 +45,14 @@ class TriviaQuestions extends Component {
 		}
 	};
 	shuffle = (a) => {
-		var j, x, i;
-		for (i = a.length - 1; i > 0; i--) {
-			j = Math.floor(Math.random() * (i + 1));
-			x = a[i];
-			a[i] = a[j];
-			a[j] = x;
+		var idxToBeReplaced;
+		var currentValue;
+		var idxThatIsReplaced
+		for (idxThatIsReplaced = a.length - 1; idxThatIsReplaced > 0; idxThatIsReplaced--) {
+			idxToBeReplaced = Math.floor(Math.random() * (idxThatIsReplaced + 1));
+			currentValue = a[idxThatIsReplaced];
+			a[idxThatIsReplaced] = a[idxToBeReplaced];
+			a[idxToBeReplaced] = currentValue;
 		}
 		return a;
 	};
